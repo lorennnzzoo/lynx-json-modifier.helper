@@ -1,0 +1,279 @@
+{
+  "dotFourSettings": {
+    "modBus": 1,
+    "snmp": 0,
+    "ethernet": 0,
+    "tcpParse": 0,
+    "loopDelay": "60",
+    "timeSync": "1",
+    "lowPowerMode": 0,
+    "disableSendStatus": "0",
+    "displayName": "NK SQUARE SOLUTIONS",
+    "useDefaultCloud": 0,
+    "cloudServer": 20,
+    "debugFlag": 1,
+    "anaToDig": 1,
+    "sensor": 0,
+    "rtc": 1,
+    "debugFourG": 1,
+    "dpPerPacket": "9",
+    "dio": 0,
+    "modBusTcp": 0,
+    "rms": 1,
+    "rmsStoreData": 1,
+    "sdCard": 1,
+    "nfh": 1,
+    "dataScale": 1,
+    "nwFallback": "0",
+    "modBus2": 0,
+    "autoRebootCycle": "0"
+  },
+  "nfhSettings": {
+    "nfhMode": 10,
+    "maxLoopCnt": 4,
+    "nfhDataDir": "/nfhTmpDir"
+  },
+  "rtcSettings": {
+    "bootupNtpSync": 1,
+    "timeZoneMinutes": "330",
+    "poolServerName": "pool.ntp.org"
+  },
+  "dataScaleSettings": {
+    "scaleVariables": {
+      "PM": {
+        "minIn": 4,
+        "maxIn": 20,
+        "minOut": 0,
+        "maxOut": 1000,
+        "minOutLimit": 0,
+        "maxOutLimit": 1000
+      },
+      "PM1": {
+        "minIn": 4,
+        "maxIn": 20,
+        "minOut": 0,
+        "maxOut": 1000,
+        "minOutLimit": 0,
+        "maxOutLimit": 1000
+      },
+      "PM2": {
+        "minIn": 4,
+        "maxIn": 20,
+        "minOut": 0,
+        "maxOut": 1000,
+        "minOutLimit": 0,
+        "maxOutLimit": 1000
+      },
+      "PM3": {
+        "minIn": 4,
+        "maxIn": 20,
+        "minOut": 0,
+        "maxOut": 1000,
+        "minOutLimit": 0,
+        "maxOutLimit": 1000
+      }
+    }
+  },
+  "httpSettings": {
+    "httpServer": "20.205.179.148",
+    "httpApiName": "/NkssLiveData/api/readlivedata",
+    "httpPort": "80",
+    "httpSSL": 0,
+    "httpSuccessCode": "200"
+  },
+  "payloadSettings": {
+    "payloadType": "14",
+    "sendTimeStamp": 1,
+    "key1": "Variablename",
+    "key2": "Value",
+    "tsKey": "Datetime",
+    "tsType": "65",
+    "metaData": {
+      "FunctionName": "53",
+      "Name": "JSW",
+      "Password": "JSW",
+      "DeviceID": "91855",
+      "additionalInfo": {
+        "SoftwareNameVersion": "NK2EnviroMonitor-V1.0",
+        "Lattitude": "17.53",
+        "Longitude": "78.45"
+      }
+    },
+    "varData": {
+      "MODBUS": {
+        "varName": "No1",
+        "metaData": {
+          "Unit": "mg/Nm3",
+          "Flags": ""
+        }
+      },
+      "PM": {
+        "varName": "PM",
+        "metaData": {
+          "Unit": "mg/Nm3",
+          "Flags": ""
+        }
+      },
+      "PM1": {
+        "varName": "PM1",
+        "metaData": {
+          "Unit": "mg/Nm3",
+          "Flags": ""
+        }
+      },
+      "PM2": {
+        "varName": "PM2",
+        "metaData": {
+          "Unit": "mg/Nm3",
+          "Flags": ""
+        }
+      },
+      "PM3": {
+        "varName": "PM3",
+        "metaData": {
+          "Unit": "m3/hr",
+          "Flags": ""
+        }
+      }
+    }
+  },
+  "anaToDigSettings": {
+    "anaToDigCnt": 4,
+    "anaToDigArray": [
+      {
+        "anaToDigType": 1,
+        "minOutVal": 0,
+        "maxOutVal": 20,
+        "minmA": 0,
+        "maxmA": 20,
+        "dcRes": 150,
+        "varName": "PM",
+        "varName2": "a1_raw",
+        "varFactor": 1
+      },
+      {
+        "anaToDigType": 1,
+        "minOutVal": 0,
+        "maxOutVal": 20,
+        "minmA": 0,
+        "maxmA": 20,
+        "dcRes": 150,
+        "varName": "PM1",
+        "varFactor": 1,
+        "varName2": ""
+      },
+      {
+        "anaToDigType": 1,
+        "minOutVal": 0,
+        "maxOutVal": 20,
+        "minmA": 0,
+        "maxmA": 20,
+        "dcRes": 150,
+        "varName": "PM2",
+        "varFactor": 1,
+        "varName2": ""
+      },
+      {
+        "anaToDigType": 1,
+        "minOutVal": 0,
+        "maxOutVal": 20,
+        "minmA": 0,
+        "maxmA": 20,
+        "dcRes": 150,
+        "varName": "PM3",
+        "varFactor": 1,
+        "varName2": ""
+      }
+    ]
+  },
+  "ethernetSettings": {
+    "useStaticIP": 1,
+    "etherIP": [
+      "192",
+      "168",
+      "1",
+      "243"
+    ],
+    "etherSubnet": [
+      "255",
+      "255",
+      "255",
+      "0"
+    ],
+    "etherGateway": [
+      "192",
+      "168",
+      "1",
+      "1"
+    ],
+    "etherDns": [
+      "8",
+      "8",
+      "8",
+      "8"
+    ]
+  },
+  "modBusSettings": {
+    "mbBaudRate": "9600",
+    "mbParity": "1",
+    "mbSlaveCnt": 1,
+    "mbReadTryCount": "1"
+  },
+  "modBusSlaves": [
+    {
+      "slaveID": "1",
+      "mbRegCnt": 1,
+      "mbArray": [
+        {
+          "varName": "MODBUS",
+          "mbReg": "40004",
+          "varType": "1",
+          "varFactor": "204"
+        }
+      ]
+    }
+  ],
+  "ftpSettings": {
+    "ftpServer": "184.168.126.172",
+    "ftpUser": "test_yudash",
+    "ftpTryCount": 5,
+    "ftpMaxFileCount": 10,
+    "ftpPassword": "YUD@$#@8uhb",
+    "ftpChangeDir": "BaseFolder/Logger2_AQMS",
+    "ftpFileLine1": "Date,ch1,ch2,ch3,ch4,ch5",
+    "ftpFileLine2": ",mg/l,mg/l,mg/l,mg/l,mg/l",
+    "ftpParamArr": [
+      "date",
+      "m1_process",
+      "analog1",
+      "m2_process",
+      "analog2"
+    ]
+  },
+  "tcpParseSettings": {
+    "httpServer": "192.168.1.201",
+    "httpApiName": "/",
+    "httpPort": "80",
+    "keyPrefix": "td id=\"",
+    "keySuffix": "\"",
+    "valPrefix": ">",
+    "valSuffix": "<",
+    "tagArray": [
+      {
+        "varName": "COD",
+        "tagName": "SVAL1",
+        "varType": "2"
+      },
+      {
+        "varName": "BOD",
+        "tagName": "SVAL2",
+        "varType": "2"
+      },
+      {
+        "varName": "PH",
+        "tagName": "SVAL3",
+        "varType": "2"
+      }
+    ]
+  }
+}
