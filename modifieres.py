@@ -65,7 +65,7 @@ def defaultModifier():
     modbusSettingsString=json.dumps(modBusSettingsBlock)
     
     dotFourSettingsBlock+=", \"modBusSettings\": "+modbusSettingsString+""    
-    print('modbus Settings block is created')
+    print('modbus Settings block is generated')
 
     userInputModbusSlavesAndRegisters=input('\n\nPlease Provide slave id and no of regsters you want to read \nfor example 1,4 : ')
     slaveId=userInputModbusSlavesAndRegisters.split(',')[0]
@@ -89,8 +89,31 @@ def defaultModifier():
     slaveAndRegistersBlock ='{"slaveID": "'+slaveId+'","mbRegCnt": '+parity+',"mbArray": '+mbarray+'}'
     dotFourSettingsBlock+=',"modBusSlaves":['+str(slaveAndRegistersBlock)+']'                    
     print('\n\nregister data and slave data block is generated')
-    print('\n\n '+dotFourSettingsBlock)
 
+    userInputAnalogSettings=input('\n\nPlease enter the no of analog channels and its values count \nfor example : 1to8')    
+    analogchannels=userInputAnalogSettings
+    print('you will be asked to enter analog channels data for '+analogchannels+' times')
+    for i in range(int(analogchannels)):
+        userinputAnalogData=input('Please enter analog data for channel '+str(i+1)+' flag,varname,varname2,minrange,maxrange,factor\nfor example 1,PM,0,1000')
+        flag=userinputAnalogData.split(',')[0]
+        varName=userinputAnalogData.split(',')[1]
+        varName2=userinputAnalogData.split(',')[2]
+        minRange=userinputAnalogData.split(',')[3]
+        maxRange=userinputAnalogData.split(',')[4]
+        factor=userinputAnalogData.split(',')[5]
+        if(1>0):
+            anaToDigArray=',{\"anaToDigType":'+flag+',\"minOutVal":0,\"maxOutVal":20,\"minmA":0,\"maxmA":20,\"varName":'+str(varName)+',\"varName2":'+str(varName2)+',\"varFactor":'+factor+'}'
+        else:
+            anaToDigArray='{\"anaToDigType":'+flag+',\"minOutVal":0,\"maxOutVal":20,\"minmA":0,\"maxmA":20,\"varName":'+str(varName)+',\"varName2":'+str(varName2)+',\"varFactor":'+factor+'}'
+    analogSettingsBlock=',\"anaToDigSettings":{ \"anaToDigCnt":'+analogchannels+',\"anaToDigArray":['+str(anaToDigArray)+']}'
+    print('\n\n analog settings block generated')
+
+    dotFourSettingsBlock+=analogSettingsBlock
+
+
+    print('\n\n '+dotFourSettingsBlock)
+    json_data = json.loads('{'+dotFourSettingsBlock+'}')
+    print(json_data)
 def threeSevenModifier():
     pass
 def threeNineOneModifier():
