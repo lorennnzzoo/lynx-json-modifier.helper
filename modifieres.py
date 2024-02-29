@@ -136,5 +136,4 @@ def defaultModifier():
             print('\n\nEthernet Settings Block Generated')
 
     print('\n\n '+dotFourSettingsBlock)
-    json_data = json.loads('{'+dotFourSettingsBlock+'}')
-    print(json_data)
+    json_data = json.loads('{'+dotFourSettingsBlock+'}')        
