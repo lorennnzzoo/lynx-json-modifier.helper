@@ -9,21 +9,20 @@ def defaultModifier():
     autoRebootCycle=userFourSettings[4]
     dataScale=userFourSettings[5]
 
-    lynxdefualt = {
-        "dotFourSettings": {
-    "modBus": int(modbus),
+    data = {
+    "modBus": 1,
     "snmp": 0,
-    "ethernet": int(ethernet),
+    "ethernet": 0,
     "tcpParse": 0,
     "loopDelay": "60",
     "timeSync": "1",
     "lowPowerMode": 0,
     "disableSendStatus": "0",
-    "displayName": str(displayName),
+    "displayName": "NK SQUARE SOLUTIONS",
     "useDefaultCloud": 0,
     "cloudServer": 20,
     "debugFlag": 1,
-    "anaToDig": int(analog),
+    "anaToDig": 1,
     "sensor": 0,
     "rtc": 1,
     "debugFourG": 1,
@@ -34,15 +33,63 @@ def defaultModifier():
     "rmsStoreData": 1,
     "sdCard": 1,
     "nfh": 1,
-    "dataScale": int(dataScale),
+    "dataScale": 1,
     "nwFallback": "0",
     "modBus2": 0,
-    "autoRebootCycle": str(autoRebootCycle)
+    "autoRebootCycle": "0"
+}
+
+# Update specific values
+    data["modBus"] = int(modbus)
+    data["anaToDig"] = int(analog)
+    data["dataScale"] = int(dataScale)
+    data["displayName"] = str(displayName)
+    data["ethernet"] = int(ethernet)
+    data["autoRebootCycle"] = str(autoRebootCycle)
+    dotfourstring = json.dumps(data)
+    dotFourSettingsBlock= "\"dotFourSettings\": "+dotfourstring+""
+    print('dotFourSettingsBlock Generated')
+
+
+    userInputModbus=input('\n\nPlease Give Inputs For Modbus baudrate and parity For \nExample 9600,1 : ')
+    baudrate=userInputModbus.split(',')[0]
+    parity=userInputModbus.split(',')[1]
+    modBusSettingsBlock = {
+    "mbBaudRate": "9600",
+    "mbParity": "1",
+    "mbSlaveCnt": 1,
+    "mbReadTryCount": "1"
   }
-    }
-    dotFourSettingsBlock= "{"+str(lynxdefualt).replace("{","").replace("}","")+"}"
+    modBusSettingsBlock['mbBaudRate']=baudrate
+    modBusSettingsBlock["mbParity"]=parity
+    modbusSettingsString=json.dumps(modBusSettingsBlock)
+    
+    dotFourSettingsBlock+=", \"modBusSettings\": "+modbusSettingsString+""    
+    print('modbus Settings block is created')
 
+    userInputModbusSlavesAndRegisters=input('\n\nPlease Provide slave id and no of regsters you want to read \nfor example 1,4 : ')
+    slaveId=userInputModbusSlavesAndRegisters.split(',')[0]
+    registersCount=userInputModbusSlavesAndRegisters.split(',')[1]
+    print('You will be asked to enter registers data '+str(registersCount)+' times')
+    mbarray = '['
+    for i in range(int(registersCount)):
+        userInputRegistersData = input('\n\nPlease enter varName,registerNo,dataType,factor \nfor example MODBUS,40004,1,204: ')
+        registerName = userInputRegistersData.split(',')[0]
+        registerNumber = userInputRegistersData.split(',')[1]
+        dataType = userInputRegistersData.split(',')[2]
+        factor = userInputRegistersData.split(',')[3]
 
+        if i > 0:
+            mbarray += ',{"varName":"' + str(registerName) + '","mbReg":"' + str(registerNumber) + '","varType":"' + str(dataType) + '","varFactor":"' + str(factor) + '"}'
+        else:
+            mbarray += '{"varName":"' + str(registerName) + '","mbReg":"' + str(registerNumber) + '","varType":"' + str(dataType) + '","varFactor":"' + str(factor) + '"}'
+
+    mbarray += ']'
+
+    slaveAndRegistersBlock ='{"slaveID": "'+slaveId+'","mbRegCnt": '+parity+',"mbArray": '+mbarray+'}'
+    dotFourSettingsBlock+=',"modBusSlaves":['+str(slaveAndRegistersBlock)+']'                    
+    print('\n\nregister data and slave data block is generated')
+    print('\n\n '+dotFourSettingsBlock)
 
 def threeSevenModifier():
     pass
