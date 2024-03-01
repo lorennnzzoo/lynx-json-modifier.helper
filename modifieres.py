@@ -169,18 +169,31 @@ def defaultModifier():
             dataScaleString += ',' + var
         else:
             dataScaleString += var
-    dataScaleString+='}'
+    dataScaleString+='}}'
     dotFourSettingsBlock+=','+dataScaleString
 
     print('\n\ndatascalesettings block generated')
 
-    userInputPayloadSettings=input('\n\nPlease enter deviceid : ')
-    if isinstance(userInputPayloadSettings, int):
-        deviceId=userInputPayloadSettings
-        payloadString=',\"payloadSettings":{\"payloadType":\"14",\"sendTimeStamp":1,\"key1":\"Variablename",\"key2":\"Value",\"tskey":\"Datetime",\"tsType":\"65",\"metaData":{\"FunctionName":\"53",\"Name":\"JSW",\"Password":\"JSW",\"DeviceID":\"'+deviceId+'",\"additionalInfo":{\"SoftwareNameVersion":\"NK2EnviroMonitor-V1.0",\"Lattitude":\"17.53",\"Longitude":\"78.45"}'
-        varDataString='},\"varData":{'
-    else:
-        print('please enter valid deviceid')
+    userInputPayloadSettings=input('\n\nPlease enter deviceid : ')    
+    deviceId=userInputPayloadSettings
+    payloadString=',\"payloadSettings":{\"payloadType":\"14",\"sendTimeStamp":1,\"key1":\"Variablename",\"key2":\"Value",\"tskey":\"Datetime",\"tsType":\"65",\"metaData":{\"FunctionName":\"53",\"Name":\"JSW",\"Password":\"JSW",\"DeviceID":\"'+deviceId+'",\"additionalInfo":{\"SoftwareNameVersion":\"NK2EnviroMonitor-V1.0",\"Lattitude":\"17.53",\"Longitude":\"78.45"}}'
+    varDataString=',\"varData":{'
+    mapdata=str()
+    for i,var in enumerate(variablesForDataScaling):
+        userInputMapping=input('\nPlease enter DeviceidChannelName,Unit for '+str(var)+' if not needed enter F\nfor example NO,mg/nm3 : ')
+        if userInputMapping != 'F':
+            DeviceIdChannelName=userInputMapping.split(',')[0]
+            Unit=userInputMapping.split(',')[1]
+            if i>0:
+                mapdata+=',\"'+var+'":{\"varName":\"'+DeviceIdChannelName+'",\"metaData":{\"Unit":\"'+Unit+'",\"Flags":""}}'
+            else:
+                mapdata+='\"'+var+'":{\"varName":\"'+DeviceIdChannelName+'",\"metaData":{\"Unit":\"'+Unit+'",\"Flags":""}}'
+    payloadString+=varDataString
+    payloadString+=mapdata
+    dotFourSettingsBlock+=payloadString+'}}'
+        
+            
+    
     
 
     print('\n\n '+dotFourSettingsBlock)
@@ -188,4 +201,4 @@ def defaultModifier():
     with open('output.json', 'w') as json_file:
         json.dump(json_data, json_file, indent=4)    
         json_file.close()
-    subprocess.run('output.json')        
+    subprocess.run(['notepad.exe', 'output.json'], check=True) 
