@@ -1,6 +1,7 @@
 import subprocess
 import json
 def defaultModifier():    
+    filename=input('Please Provide the filename for your json : ')
     variablesForDataScaling=[]
     userInput=input("Please Give inputs for Modbus, Analog, Static Ethernet, Display Name, Auto Reboot Cycle, Data Scaling\nFor Example : 1,1,0,NK Square Solutions,1,1 : ")
     userFourSettings=userInput.split(",")
@@ -198,7 +199,6 @@ def defaultModifier():
 
     print('\n\n '+dotFourSettingsBlock)
     json_data = json.loads('{'+dotFourSettingsBlock+'}')    
-    with open('output.json', 'w') as json_file:
+    with open(+filename+'.json', 'w') as json_file:
         json.dump(json_data, json_file, indent=4)    
-        json_file.close()
-    subprocess.run(['notepad.exe', 'output.json'], check=True) 
+        json_file.close()    
