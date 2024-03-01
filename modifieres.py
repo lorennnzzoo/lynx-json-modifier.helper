@@ -170,9 +170,17 @@ def defaultModifier():
         else:
             dataScaleString += var
     dataScaleString+='}'
-        
+    dotFourSettingsBlock+=','+dataScaleString
 
+    print('\n\ndatascalesettings block generated')
 
+    userInputPayloadSettings=input('\n\nPlease enter deviceid : ')
+    if isinstance(userInputPayloadSettings, int):
+        deviceId=userInputPayloadSettings
+        payloadString=',\"payloadSettings":{\"payloadType":\"14",\"sendTimeStamp":1,\"key1":\"Variablename",\"key2":\"Value",\"tskey":\"Datetime",\"tsType":\"65",\"metaData":{\"FunctionName":\"53",\"Name":\"JSW",\"Password":\"JSW",\"DeviceID":\"'+deviceId+'",\"additionalInfo":{\"SoftwareNameVersion":\"NK2EnviroMonitor-V1.0",\"Lattitude":\"17.53",\"Longitude":\"78.45"}'
+        varDataString='},\"varData":{'
+    else:
+        print('please enter valid deviceid')
     
 
     print('\n\n '+dotFourSettingsBlock)
