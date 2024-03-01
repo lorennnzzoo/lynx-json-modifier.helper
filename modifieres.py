@@ -1,5 +1,7 @@
+import subprocess
 import json
 def defaultModifier():    
+    variablesForDataScaling=[]
     userInput=input("Please Give inputs for Modbus, Analog, Static Ethernet, Display Name, Auto Reboot Cycle, Data Scaling\nFor Example : 1,1,0,NK Square Solutions,1,1 : ")
     userFourSettings=userInput.split(",")
     modbus=userFourSettings[0]
@@ -57,7 +59,7 @@ def defaultModifier():
     dotFourSettingsBlock+=',\"nfhSettings":{\"nfhMode":10,\"maxLoopCnt":4,\"nfhDataDir":\"/nfhTmpDir"}'
     dotFourSettingsBlock+=',\"rtcSettings":{\"bootupNtpSync":1,\"timeZoneMinutes":\"330",\"poolServerName":\"pool.ntp.org"}'
 
-    if int(modbus) is 1:
+    if int(modbus) == 1:
         userInputModbus=input('\n\nPlease Give Inputs For Modbus baudrate and parity For \nExample 9600,1 : ')
         baudrate=userInputModbus.split(',')[0]
         parity=userInputModbus.split(',')[1]
@@ -65,7 +67,8 @@ def defaultModifier():
         "mbBaudRate": "9600",
         "mbParity": "1",
         "mbSlaveCnt": 1,
-        "mbReadTryCount": "1"
+        "mbReadTryCount": "1",
+        "mbHwSerial": 0
     }
         modBusSettingsBlock['mbBaudRate']=baudrate
         modBusSettingsBlock["mbParity"]=parity
@@ -82,6 +85,7 @@ def defaultModifier():
         for i in range(int(registersCount)):
             userInputRegistersData = input('\n\nPlease enter varName,registerNo,dataType,factor \nfor example MODBUS,40004,1,204: ')
             registerName = userInputRegistersData.split(',')[0]
+            variablesForDataScaling.append(registerName)
             registerNumber = userInputRegistersData.split(',')[1]
             dataType = userInputRegistersData.split(',')[2]
             factor = userInputRegistersData.split(',')[3]
@@ -96,33 +100,35 @@ def defaultModifier():
         slaveAndRegistersBlock ='{"slaveID": "'+slaveId+'","mbRegCnt": '+parity+',"mbArray": '+mbarray+'}'
         dotFourSettingsBlock+=',"modBusSlaves":['+str(slaveAndRegistersBlock)+']'                    
         print('\n\nregister data and slave data block is generated')
-    if int(analog) is 1:
+    if int(analog) == 1:
 
         userInputAnalogSettings=input('\n\nPlease enter the no of analog channels and its values count \nfor example 1 to 8 : ')    
-        analogchannels=userInputAnalogSettings
-        print('you will be asked to enter analog channels data for '+analogchannels+' times')
-        anaToDigArray=str()
-        for i in range(int(analogchannels)):
-            userinputAnalogData=input('\n\nPlease enter analog data for channel '+str(i+1)+' varname,varname2,minrange,maxrange,factor\nfor example PM,PM_ma,0,1000,1 : ')        
-            varName=userinputAnalogData.split(',')[0]
-            varName2=userinputAnalogData.split(',')[1]
-            minRange=userinputAnalogData.split(',')[2]
-            maxRange=userinputAnalogData.split(',')[3]
-            factor=userinputAnalogData.split(',')[4]
-            if i>0:
-                anaToDigArray +=',{\"anaToDigType":1,\"minOutVal":0,\"maxOutVal":20,\"minmA":0,\"maxmA":20,\"varName":\"'+(varName)+'",\"varName2":\"'+(varName2)+'",\"varFactor":'+factor+'}'
-            else:
-                anaToDigArray +='{\"anaToDigType":1,\"minOutVal":0,\"maxOutVal":20,\"minmA":0,\"maxmA":20,\"varName":\"'+(varName)+'",\"varName2":\"'+(varName2)+'",\"varFactor":'+factor+'}'
-        analogSettingsBlock=',\"anaToDigSettings":{ \"anaToDigCnt":'+analogchannels+',\"anaToDigArray":['+str(anaToDigArray)+']}'
-        
+        if int(userInputAnalogSettings)>8:
+            print('length cannot exceed more than 8')
+        else:
+            analogchannels=userInputAnalogSettings
+            print('you will be asked to enter analog channels data for '+analogchannels+' times')
+            anaToDigArray=str()
+            for i in range(int(analogchannels)):
+                userinputAnalogData=input('\n\nPlease enter analog data for channel '+str(i+1)+' varname,varname2,factor\nfor example PM,PM_ma,1 : ')        
+                varName=userinputAnalogData.split(',')[0]
+                variablesForDataScaling.append(varName)
+                varName2=userinputAnalogData.split(',')[1]
+                factor=userinputAnalogData.split(',')[2]
+                if i>0:
+                    anaToDigArray +=',{\"anaToDigType":1,\"minOutVal":0,\"maxOutVal":20,\"minmA":0,\"maxmA":20,\"dcRes":150,\"varName":\"'+(varName)+'",\"varName2":\"'+(varName2)+'",\"varFactor":'+factor+'}'
+                else:
+                    anaToDigArray +='{\"anaToDigType":1,\"minOutVal":0,\"maxOutVal":20,\"minmA":0,\"maxmA":20,\"dcRes":150,\"varName":\"'+(varName)+'",\"varName2":\"'+(varName2)+'",\"varFactor":'+factor+'}'
+            analogSettingsBlock=',\"anaToDigSettings":{ \"anaToDigCnt":'+analogchannels+',\"anaToDigArray":['+str(anaToDigArray)+']}'
+            
 
-        dotFourSettingsBlock+=analogSettingsBlock
-        print('\n\n analog settings block generated')
+            dotFourSettingsBlock+=analogSettingsBlock
+            print('\n\n analog settings block generated')
 
-    if int(ethernet)  is 1:
+    if int(ethernet)  == 1:
         userInputEtherNetSettings=input('\n\nPlease enter IP,SUBNETMASK,GATEWAY,DNS \nFor example 192.168.1.243,255.255.255.0,192.168.1.1,8.8.8.8  if not needed enter F : ')
         if(userInputEtherNetSettings=='F'):
-            dotFourSettingsBlock+=',\"ethernetSettings":{\"userStaticIP":[\"192",\"168",\"1,\"143"],\"etherSubnet":[\"255",\"255",\"255",\"0"],\"etherGateway":[\"192",\"168",\"1",\"1"],\"etherDns":[\"8",\"8",\"8",\"8]}'
+            dotFourSettingsBlock+=',\"ethernetSettings":{\"userStaticIP":0,\"etherIP":[\"192",\"168",\"1,\"143"],\"etherSubnet":[\"255",\"255",\"255",\"0"],\"etherGateway":[\"192",\"168",\"1",\"1"],\"etherDns":[\"8",\"8",\"8",\"8]}'
         else:
             ip=userInputEtherNetSettings.split(',')[0]
             subnet=userInputEtherNetSettings.split(',')[1]
@@ -132,8 +138,46 @@ def defaultModifier():
             subnetArray=subnet.split('.')
             gatewayArray=gateway.split('.')
             dnsArray=dns.split('.')
-            dotFourSettingsBlock+=',\"ethernetSettings":{\"userStaticIP":[\"'+ipArray[0]+'",\"'+ipArray[1]+'",\"'+ipArray[2]+'",\"'+ipArray[3]+'"],\"etherSubnet":[\"'+subnetArray[0]+'",\"'+subnetArray[1]+'",\"'+subnetArray[2]+'",\"'+subnetArray[3]+'"],\"etherGateway":[\"'+gatewayArray[0]+'",\"'+gatewayArray[1]+'",\"'+gatewayArray[2]+'",\"'+gatewayArray[3]+'"],\"etherDns":[\"'+dnsArray[0]+'",\"'+dnsArray[1]+'",\"'+dnsArray[2]+'",\"'+dnsArray[3]+'"]}'
+            dotFourSettingsBlock+=',\"ethernetSettings":{\"userStaticIP":1,\"etherIP":[\"'+ipArray[0]+'",\"'+ipArray[1]+'",\"'+ipArray[2]+'",\"'+ipArray[3]+'"],\"etherSubnet":[\"'+subnetArray[0]+'",\"'+subnetArray[1]+'",\"'+subnetArray[2]+'",\"'+subnetArray[3]+'"],\"etherGateway":[\"'+gatewayArray[0]+'",\"'+gatewayArray[1]+'",\"'+gatewayArray[2]+'",\"'+gatewayArray[3]+'"],\"etherDns":[\"'+dnsArray[0]+'",\"'+dnsArray[1]+'",\"'+dnsArray[2]+'",\"'+dnsArray[3]+'"]}'
             print('\n\nEthernet Settings Block Generated')
+    
+    userInputHttpSettings=input('\n\nPlease enter ServerURL,EndPoint\nfor example 20.205.179.148,/NkssLiveData/api/readlivedata : ')
+    httpServer=userInputHttpSettings.split(',')[0]
+    httpApiName=userInputHttpSettings.split(',')[1]
+    dotFourSettingsBlock+=',\"httpSettings":{\"httpServer":"'+httpServer+'",\"httpApiName":"'+httpApiName+'",\"httpPort":\"80",\"httpSSL":0,\"httpSuccessCode":\"200"}'
+
+    print('\n\nHttpSettings Block generated')
+
+
+    dataScaleString='\"dataScaleSettings":{\"scaleVariables":{'
+    varScale=[]
+    if variablesForDataScaling != None:
+        userInputIsDataScale=input('\n\nthere are '+str(len(variablesForDataScaling))+' variables you added do you want to apply data scaling for them?\nenter S if yes F if no ')
+        if userInputIsDataScale == 'S':
+            for var in variablesForDataScaling:
+                userInputDataScaleSettings=input('\n\nPlease enter min input,max input,min range,max range,min cutoff,max cutoff if not need press F\nfor '+var+'\nfor example 4,20,0,1000,0,1000 : ')
+                if userInputDataScaleSettings != 'F':
+                    minIn=userInputDataScaleSettings.split(',')[0]
+                    maxIn=userInputDataScaleSettings.split(',')[1]
+                    minOut=userInputDataScaleSettings.split(',')[2]
+                    maxOut=userInputDataScaleSettings.split(',')[3]
+                    minOutLimit=userInputDataScaleSettings.split(',')[4]
+                    maxOutLimit=userInputDataScaleSettings.split(',')[5]
+                    varScale.append('\"'+var+'":{\"minIn":'+minIn+',\"maxIn":'+maxIn+',\"minOut":'+minOut+',\"maxOut":'+maxOut+',\"minOutLimit":'+minOutLimit+',\"maxOutLimit":'+maxOutLimit+',\"maxOutRandom":0,\"maxOutLimitR1":430,\"maxOutLimitR2":490}')
+    for i, var in enumerate(varScale):
+        if i > 0:
+            dataScaleString += ',' + var
+        else:
+            dataScaleString += var
+    dataScaleString+='}'
+        
+
+
+    
 
     print('\n\n '+dotFourSettingsBlock)
-    json_data = json.loads('{'+dotFourSettingsBlock+'}')        
+    json_data = json.loads('{'+dotFourSettingsBlock+'}')    
+    with open('output.json', 'w') as json_file:
+        json.dump(json_data, json_file, indent=4)    
+        json_file.close()
+    subprocess.run('output.json')        
