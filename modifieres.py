@@ -192,13 +192,8 @@ def defaultModifier():
     payloadString+=varDataString
     payloadString+=mapdata
     dotFourSettingsBlock+=payloadString+'}}'
-        
             
-    
-    
-
-    print('\n\n '+dotFourSettingsBlock)
     json_data = json.loads('{'+dotFourSettingsBlock+'}')    
-    with open(+filename+'.json', 'w') as json_file:
+    with open(filename+'.json', 'w') as json_file:
         json.dump(json_data, json_file, indent=4)    
         json_file.close()    
